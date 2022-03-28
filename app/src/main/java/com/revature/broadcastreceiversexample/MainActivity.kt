@@ -1,5 +1,7 @@
 package com.revature.broadcastreceiversexample
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,8 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.revature.broadcastreceiversexample.ui.theme.BroadcastReceiversExampleTheme
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var receiver: AirplaneModeChangeReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        receiver=AirplaneModeChangeReceiver()
+
+        IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED).also {
+
+            registerReceiver(receiver,it)
+        }
+
         setContent {
             BroadcastReceiversExampleTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,6 +39,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 }
 
